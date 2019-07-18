@@ -1,0 +1,240 @@
+<aura:component controller="ABCIncController">
+    <ltng:require scripts="{!$Resource.ChartJs}" afterScriptsLoaded="{!c.generateChart}"/>
+    
+    <aura:attribute name="cognitoId" type="String"/>
+    <aura:attribute type="String" name="data"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="newLead" type="Lead"  default="{ 'sobjectType': 'Lead',
+                     'FirstName': '','Email':'','Phone':'','LastName': '','Company':'','Salutation':''}"/>
+    
+    <div class="parentdiv"> 
+    <div>
+    <div class="slds-container_center">
+        <div class="slds-container_fluid">
+            <div class="slds-media slds-p-around_x-small slds-p-top_x-small slds-p-right_x-small slds-p-bottom_x-small slds-p-left_x-small">
+                <div class="slds-media__figure">
+                    <lightning:avatar alternativeText="" fallbackIconName="standard:macros" size="slds-avatar_medium" src="" variant="square"></lightning:avatar>
+                </div>
+                <div class="slds-media__body">
+                    <div class="slds-text-heading_small">Massino Tassini</div>
+                    <ul class="slds-list_horizontal slds-has-dividers_left">
+                        <li class="slds-item">
+                            <div class="slds-text-title slds-text-color_weak">Alcron Inc</div>
+                        </li>
+                        <li class="slds-item"></li>
+                    </ul>
+                </div>
+                <div class="slds-media__figure slds-media__figure_reverse"></div>
+            </div>
+            <lightning:tabset variant="default" class="slds-theme_shade">
+                <lightning:tab id="-L6dmh30xA0chGyak8Ze">
+                    <aura:set attribute="label">Dashboard
+                        <lightning:icon iconName="standard:data_integration_hub" size="small"></lightning:icon>
+                    </aura:set>
+                    <lightning:layout class="slds-wrap" multipleRows="true">
+                        <lightning:layoutItem size="6"></lightning:layoutItem>
+                        <lightning:layoutItem size="6"></lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem size="9">
+                            <div>
+                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                                    </div>
+                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                    </div>
+                                </div>
+                                <canvas aura:id="linechart"  style="display: block; height: 237px; width: 475px;" class="chartjs-render-monitor" width="950" height="474">
+                                </canvas>
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="3">
+                            <div class="slds-illustration slds-illustration_small">
+                                <div class="slds-text-align_right slds-text-heading_medium">Leads</div>
+                                <div class="slds-m-top_x-small slds-text-align_right" style="font-size: 0.8125rem; float: right;"><span>How many leads did you submit in the last 3 months?</span><br/></div>
+                            </div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem size="3">
+                            <div class="slds-text-heading_medium">Closed Won</div>
+                            <div class="slds-m-top_x-small" style="font-size: 0.8125rem;"><span>How many leads were successfully converted in the last 3 months?</span><br/></div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9">
+                            <div>
+                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                                    </div>
+                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                    </div>
+                                </div><canvas aura:id="barchart" style="display: block; height: 237px; width: 475px;" class="chartjs-render-monitor" width="950" height="474"></canvas></div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem size="9">
+                            <div>
+                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                                    </div>
+                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                    </div>
+                                </div><canvas aura:id="doughnutchart" style="display: block; height: 237px; width: 475px;" class="chartjs-render-monitor" width="950" height="474"></canvas></div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="3">
+                            <div class="slds-text-heading_medium">Closed Lost</div>
+                            <div class="slds-m-top_x-small" style="font-size: 0.8125rem;">How many leads did not convert in the last 3 months?<br/></div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:tab>
+                <lightning:tab id="-L6dmh30xA0chGyak8Zf">
+                    <aura:set attribute="label">Submit Lead
+                        <lightning:icon iconName="standard:client" size="small"></lightning:icon>
+                    </aura:set>
+                    <div class="slds-form slds-form_stacked">
+                        <lightning:layout>
+                            <lightning:layoutItem size="6">
+                                <!--<lightning:input aura:id="salutation" value="{!v.newLead.Salutation}" label="Salutation" placeholder="Mr" type="text" variant="standard"></lightning:input>-->
+                                <lightning:select name="Salutation" label="Salutation" value="{!v.newLead.Salutation}" required="false">
+                                    <option value="">choose one...</option>
+                                    <option value="1">Mr</option>
+                                    <option value="2">Mrs</option>
+                                    <option value="3">Master</option>
+                                </lightning:select>
+                                <lightning:input aura:id="fname" value="{!v.newLead.FirstName}"  label="First Name" placeholder="John" type="text" variant="standard"></lightning:input>
+                                <lightning:input aura:id="lname" value="{!v.newLead.LastName}"  label="Last Name" placeholder="Doe" type="text" variant="standard"></lightning:input>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="6">
+                                <lightning:input aura:id="hello" value="{!v.newLead.Phone}"  label="Hello" placeholder="+44 7546 333 111" type="text" variant="standard"></lightning:input>
+                                <lightning:input aura:id="email" value="{!v.newLead.Email}"  label="Email" placeholder="john@doe.com" type="email" variant="standard"></lightning:input>
+                                <lightning:input aura:id="company" value="{!v.newLead.Company}"  label="Company" placeholder="AbC Inc." type="text" variant="standard"></lightning:input>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </div>
+                    <lightning:layout class="slds-p-around_x-small">
+                        <lightning:layoutItem size="12">
+                            <lightning:button class="slds-theme_brand" variant="brand" label="Submit Lead" onclick="{!c.clickSubmitLead}"></lightning:button>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:tab>
+                <lightning:tab id="-L6dmh30xA0chGyak8Zg">
+                    <aura:set attribute="label">Leader Board
+                        <lightning:icon iconName="standard:flow" size="small"></lightning:icon>
+                    </aura:set>
+                    <lightning:layout>
+                        <lightning:layoutItem size="6"></lightning:layoutItem>
+                        <lightning:layoutItem size="6"></lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem size="8">
+                            <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
+                                <thead>
+                                    <tr class="slds-text-title_caps">
+                                        <th>
+                                            <div class="slds-truncate" title="Column 1">               Agent Name</div>
+                                        </th>
+                                        <th>
+                                            <div class="slds-truncate" title="Column 1">                Lead Count</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="slds-hint-parent">
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">Agent 007&amp;nbsp;</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">1000</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">Agent 008&amp;nbsp;</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">900</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">Agent 009&amp;nbsp;</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">800</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">Agent 010&amp;nbsp;</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">700</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">Agent 011</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">600</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">Agent 012</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">500</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">Agent 013</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">400</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">Agent 014</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">300</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">Agent 015</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">200</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">Agent 016</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-text-align_center" style="font-size: 0.8125rem;">10</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="4">
+                            <div class="slds-text-heading_large" style="float: left;">TOP PERfORMERS</div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:tab>
+            </lightning:tabset>
+        </div>
+    </div>
+</div>
+</div>        
+</aura:component>

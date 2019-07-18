@@ -1,0 +1,37 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+
+<script src="https://customcomm-dev-ed.lightning.force.com/lightning/lightning.out.js"></script>
+<div id="lightning"></div>
+ 
+   
+<script>
+	var outhtoken = accessCookie("outhtoken");
+
+	if (!outhtoken) {
+		alert("Login to Salesforce First!!!");
+		window.location.href='/';
+	} else {
+		lightningAgent();
+	}
+
+	function lightningAgent() {
+		var cognitoId = accessCookie("cognitoId");
+		var lightningEndPointURI1 = accessCookie("lightningEndPointURI");
+		var outhtoken = accessCookie("outhtoken");
+		var result = accessCookie("result");
+		//console.log(cognitoId);
+		//console.log("result-"+result);
+		var lightningEndPointURI = decodeURIComponent(lightningEndPointURI1);
+		//console.log(lightningEndPointURI);
+		//console.log(outhtoken);
+		$Lightning.use("c:ABCIncApp", function () {
+			$Lightning.createComponent("c:ABCInc", {
+				"cognitoId": cognitoId
+			}, "lightning", function (cmp) {});
+		}, lightningEndPointURI, outhtoken);
+	}
+</script>
+
+{% endblock %}
