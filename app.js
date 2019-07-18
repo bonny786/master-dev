@@ -7,7 +7,6 @@ var session = require('express-session');
 var fs = require('fs');
 const http = require('http');
 var https = require('https');
-var port = 3000;
 
 var app = express();
 
@@ -59,9 +58,9 @@ app.use('/', indexRouter);
 // 	next(createError(404));
 // });
 
- app.listen(port, function(){
- 	console.log('Web Server Listening on http://127.0.0.1:' + port);
- });
+// app.listen(port, function(){
+// 	console.log('Web Server Listening on http://127.0.0.1:' + port);
+// });
 
 http.createServer(app).listen(80, function(){
 	console.log('Web Server Listening on https://127.0.0.1:80');
