@@ -7,6 +7,7 @@ var session = require('express-session');
 var fs = require('fs');
 const http = require('http');
 var https = require('https');
+var port = 3000;
 
 var app = express();
 
