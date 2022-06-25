@@ -20,7 +20,7 @@
     "http": "0.0.0",
     "https": "^1.0.0",
     "nforce": "^1.12.2",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "path": "^0.12.7",
     "twig": "^1.13.3",
     "web-midi-api": "^2.0.5"
